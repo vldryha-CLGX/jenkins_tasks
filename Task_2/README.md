@@ -19,4 +19,4 @@
         When using groovy script to configure jenkins i meet a lot of problem with documentation.
     I needed to use examples of code from different resources. Also after creation script we get a hard to read code.
 
-    What about Configuration as Code. It is more simpler tha groovy script for one reason. In this way we have a documentation. Also one advantage is yaml format for reason easy to read.
+    What about Configuration as Code. It is much simpler than groovy script for one reason - we have a documentation. Also one advantage is yaml format  easy to read and undertanding.
