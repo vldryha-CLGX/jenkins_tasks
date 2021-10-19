@@ -1,0 +1,47 @@
+#!/usr/bin/env groovy
+@Library('jenkins-library') _
+
+servers = ["google.com","cisco.com","github.com","8.8.8.8","youtube.com"]
+
+pipeline {
+    agent {
+        node {
+            label 'slave'
+        } 
+    }
+    environment {
+        OWNER='Vlad-Dryha'
+        STAGE='PROD'
+    }
+    stages('Start pipeline') {
+        stage('Checkout') {
+            steps {
+                scmSkip(deleteBuild: true, skipPattern: 'SKIP_CI')
+            }
+        }
+        stage('Ping in parallel') {
+            steps{
+                pingServer(servers)
+            }
+        }
+        stage('Build and Test') {
+            steps {
+                buildSpring()
+            }
+        } 
+    }
+    post {
+        success {
+            archiveBuild()
+            gitTag()
+        }
+        failure {
+            echo 'Failed'
+        }
+        always {
+            echo 'END OF THE JOB!'
+            //cleanWs()
+            //slackNotifier("${currentBuild.currentResult}")
+        }
+    }
+}

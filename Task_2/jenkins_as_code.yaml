@@ -1,0 +1,110 @@
+jenkins:
+## System message  
+   systemMessage: "Configuration with JCasC"
+   authorizationStrategy:
+       loggedInUsersCanDoAnything:
+         allowAnonymousRead: false
+       roleBased:
+        roles:
+          global:
+            - name: "poweruser"
+              description: "Jenkins administrators"
+              permissions:
+                - "Overall/Administer"
+              assignments:
+                - "poweruser"
+          items: 
+            - name: 'folder3'
+              description: "Jobs in folder 3"
+              pattern: "3/.*"
+              premmissions:
+               - "Job/Configure"
+               - "Job/Build"
+               - "Job/Delete"
+              assignments: 
+               - "poweruser"
+tool:
+## Git tool  
+  git:
+    installations:
+      - name: git
+        home: /usr/local/bin/git
+
+## Credentials       
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - string:
+              scope: GLOBAL
+              id: slack-token
+              secret: "${SLACK_TOKEN}"
+              description: Slack token
+
+          - basicSSHUserPrivateKey:
+              scope: SYSTEM
+              id: ssh_github_key
+              username: ssh_root
+              description: "SSH passphrase with private key file. Private key provided"
+              privateKeySource:
+                directEntry:
+                  privateKey: "${SSH_PRIVATE_KEY}"
+          - usernamePassword:
+              scope: GLOBAL
+              id: "username"
+              username: "some-user"
+              password: "${SOME_USER_PASSWORD}"
+              description: "Username/Password Credentials for some-user"    
+
+unclassified:
+## Shared Library
+  globalLibraries:
+    libraries:
+      - name: "jenkins-library"
+        defaultVersion: "main"
+        retriever:
+          modernSCM:
+            scm:
+              git:
+                remote: "https://github.com/vlddryga2233/jenkins-library.git"
+
+## Admin email address                
+  location:
+    adminAddress: you@example.com
+
+## SMTP server    
+  mailer:
+    replyToAddress: do-not-reply@acme.org
+    smtpHost: smtp.acme.org
+    smtpPort: 4441
+
+## SLACK notifier
+ # slackNotifier:
+ #   teamDomain: <your-slack-workspace-name> # i.e. your-company (just the workspace name not the full url)
+ #   tokenCredentialId: slack-token
+
+jobs:
+  - script: >
+      folder('folder1') 
+  - script: >
+      folder('folder3')
+  - script: >
+      folder('folder1/folder2')
+  - script: >
+       pipelineJob('folder3/default-agent') {
+          definition {
+            cps {
+              script("""\
+                pipeline {
+                  agent any
+                  stages {
+                    stage ('test') {
+                      steps {
+                        echo "Hello"
+                      }
+                    }
+                  }
+                }""".stripIndent())
+            }
+          }
+       }
