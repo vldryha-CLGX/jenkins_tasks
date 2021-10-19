@@ -1,6 +1,6 @@
 # Jenkins module
 
-## Task 1
+## Task 1 
  * connect static slave node
  * create declarative job
  * add parameter environment
@@ -32,7 +32,7 @@
 
 
  ## Steps
-  * Create master and slave nodes
+  * Create master and slave nodes 
   * Provide github web-hook
   * Provide github access token
   * Configure jenkins github plugin

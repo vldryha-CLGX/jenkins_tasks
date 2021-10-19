@@ -21,4 +21,4 @@
 * for `folder1` configure your shared library
 * create credentials `USERNAME` and `PASSWORD`
 * create group and role `poweruser` and assing it to `folder1`
-* inside folder3 create test-job with build permissions for `poweruser`
+* inside folder3 create test-job with build permissions for `poweruser` 
